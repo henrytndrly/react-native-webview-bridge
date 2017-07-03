@@ -65,6 +65,7 @@ NSString *const RCTWebViewBridgeSchema = @"wvb";
     _contentInset = UIEdgeInsetsZero;
     _webView = [[UIWebView alloc] initWithFrame:self.bounds];
     _webView.delegate = self;
+    _webView.scrollView.delegate = self;
     [self addSubview:_webView];
   }
   return self;
@@ -324,6 +325,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   return [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
                                          options:NSJSONReadingAllowFragments
                                            error:nil];
+}
+
+// scroll fix from here: https://stackoverflow.com/questions/15926260/set-uiwebview-content-not-to-move-when-keyboard-is-shown
+// UIScrollViewDelegate method
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    scrollView.bounds = _webView.bounds;
 }
 
 //since there is no easy way to load the static lib resource in ios,
