@@ -96,24 +96,29 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 
 - (NSString*) getSelectedHTML {
     NSString* JSString = [NSString stringWithFormat:@"document.getSelection()"];
-    NSLog(@"selectedHTML is: %@",JSString);
     return [_webView stringByEvaluatingJavaScriptFromString:JSString];
 }
 
-- (void)sendToBridge:(NSString *)message
+- (void)sendToBridge:(NSString *)message andIsJSCode:(NSString *)isJSCode
 {
-  //we are warpping the send message in a function to make sure that if
-  //WebView is not injected, we don't crash the app.
-  NSString *format = NSStringMultiline(
-    (function(){
-      if (WebViewBridge && WebViewBridge.__push__) {
-        WebViewBridge.__push__('%@');
-      }
-    }());
-  );
+    NSString * truthy = @"true";
+    if ([truthy isEqualToString:isJSCode]) {
+        [_webView stringByEvaluatingJavaScriptFromString:message];
+    }
+    else {
+      //we are warpping the send message in a function to make sure that if
+      //WebView is not injected, we don't crash the app.
+      NSString *format = NSStringMultiline(
+        (function(){
+          if (WebViewBridge && WebViewBridge.__push__) {
+            WebViewBridge.__push__('%@');
+          }
+        }());
+      );
 
-  NSString *command = [NSString stringWithFormat: format, message];
-  [_webView stringByEvaluatingJavaScriptFromString:command];
+      NSString *command = [NSString stringWithFormat: format, message];
+      [_webView stringByEvaluatingJavaScriptFromString:command];
+    }
 }
 
 - (NSURL *)URL

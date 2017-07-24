@@ -228,8 +228,13 @@ var WebViewBridge = React.createClass({
     );
   },
 
-  sendToBridge: function (message: string) {
-    WebViewBridgeManager.sendToBridge(this.getWebViewBridgeHandle(), message);
+  sendToBridge: function (message: string, isJSCode: string) {
+      if (isJSCode === "true"){
+        WebViewBridgeManager.sendToBridgeAsJS(this.getWebViewBridgeHandle(), message);
+      }
+      else {
+        WebViewBridgeManager.sendToBridge(this.getWebViewBridgeHandle(), message);
+      }
   },
 
   getElementHTML: function (elementId: string, callback) {

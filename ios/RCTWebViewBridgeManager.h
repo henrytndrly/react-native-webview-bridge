@@ -14,4 +14,8 @@
 
 @interface RCTWebViewBridgeManager : RCTViewManager
 
+- (void)sendToBridgeInternal:(nonnull NSNumber *)reactTag
+                  value:(NSString*)message
+                  andIsJSCode:(NSString*)isJSCode;
+
 @end
