@@ -95,19 +95,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
         [_webView stringByEvaluatingJavaScriptFromString:message];
     }
     else {
-      //we are warpping the send message in a function to make sure that if
-      //WebView is not injected, we don't crash the app.
-      NSString *format = NSStringMultiline(
-        (function(){
-          if (WebViewBridge && WebViewBridge.__push__) {
-            WebViewBridge.__push__('%@');
-          }
-        }());
-      );
+  //we are warpping the send message in a function to make sure that if
+  //WebView is not injected, we don't crash the app.
+  NSString *format = NSStringMultiline(
+    (function(){
+      if (WebViewBridge && WebViewBridge.__push__) {
+        WebViewBridge.__push__('%@');
+      }
+    }());
+  );
 
-      NSString *command = [NSString stringWithFormat: format, message];
+  NSString *command = [NSString stringWithFormat: format, message];
       [_webView stringByEvaluatingJavaScriptFromString:command];
-    }
+}
 }
 
 - (NSURL *)URL
