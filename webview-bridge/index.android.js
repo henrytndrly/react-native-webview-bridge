@@ -67,7 +67,7 @@ var WebViewBridge = React.createClass({
     };
   },
 
-  
+
   componentWillMount: function() {
     DeviceEventEmitter.addListener("webViewBridgeMessage", (body) => {
       const { onBridgeMessage } = this.props;
@@ -168,7 +168,10 @@ var WebViewBridge = React.createClass({
     );
   },
 
-  sendToBridge: function (message: string) {
+  sendToBridge: function (message: string, isJSCode: string) {
+      if (isJSCode != null) {
+          alert('Implement RN WebView Bridge sendToBridge for Android!');
+      }
     UIManager.dispatchViewManagerCommand(
       this.getWebViewBridgeHandle(),
       UIManager.RCTWebViewBridge.Commands.sendToBridge,

@@ -40,7 +40,7 @@ shouldStartLoadForRequest:(NSMutableDictionary<NSString *, id> *)request
 
 @end
 
-@interface RCTWebViewBridge : RCTView
+@interface RCTWebViewBridge : RCTView <UIScrollViewDelegate>
 
 @property (nonatomic, weak) id<RCTWebViewBridgeDelegate> delegate;
 
@@ -53,6 +53,8 @@ shouldStartLoadForRequest:(NSMutableDictionary<NSString *, id> *)request
 - (void)goForward;
 - (void)goBack;
 - (void)reload;
-- (void)sendToBridge:(NSString *)message;
+- (void)sendToBridge:(NSString *)message andIsJSCode:(NSString *)isJSCode;
+- (NSString*) getElementHTML:(NSString*)elementId;
+- (NSString*) getSelectedHTML;
 
 @end

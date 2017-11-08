@@ -54,6 +54,7 @@ NSString *const RCTWebViewBridgeSchema = @"wvb";
     _contentInset = UIEdgeInsetsZero;
     _webView = [[UIWebView alloc] initWithFrame:self.bounds];
     _webView.delegate = self;
+    _webView.scrollView.delegate = self;
     [self addSubview:_webView];
   }
   return self;
@@ -76,20 +77,37 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   [_webView reload];
 }
 
-- (void)sendToBridge:(NSString *)message
+- (NSString*) getElementHTML:(NSString*)elementId
 {
-  //we are warpping the send message in a function to make sure that if
-  //WebView is not injected, we don't crash the app.
-  NSString *format = NSStringMultiline(
-    (function(){
-      if (WebViewBridge && WebViewBridge.__push__) {
-        WebViewBridge.__push__('%@');
-      }
-    }());
-  );
+    NSString* JSString = [NSString stringWithFormat:@"document.getElementById(\"%@\").innerHTML",elementId];
+    return [_webView stringByEvaluatingJavaScriptFromString:JSString];
+}
 
-  NSString *command = [NSString stringWithFormat: format, message];
-  [_webView stringByEvaluatingJavaScriptFromString:command];
+- (NSString*) getSelectedHTML {
+    NSString* JSString = [NSString stringWithFormat:@"document.getSelection()"];
+    return [_webView stringByEvaluatingJavaScriptFromString:JSString];
+}
+
+- (void)sendToBridge:(NSString *)message andIsJSCode:(NSString *)isJSCode
+{
+    NSString * truthy = @"true";
+    if ([truthy isEqualToString:isJSCode]) {
+        [_webView stringByEvaluatingJavaScriptFromString:message];
+    }
+    else {
+      //we are warpping the send message in a function to make sure that if
+      //WebView is not injected, we don't crash the app.
+      NSString *format = NSStringMultiline(
+        (function(){
+          if (WebViewBridge && WebViewBridge.__push__) {
+            WebViewBridge.__push__('%@');
+          }
+        }());
+      );
+
+      NSString *command = [NSString stringWithFormat: format, message];
+      [_webView stringByEvaluatingJavaScriptFromString:command];
+    }
 }
 
 - (NSURL *)URL
@@ -301,6 +319,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
   return [NSJSONSerialization JSONObjectWithData:[message dataUsingEncoding:NSUTF8StringEncoding]
                                          options:NSJSONReadingAllowFragments
                                            error:nil];
+}
+
+// scroll fix from here: https://stackoverflow.com/questions/15926260/set-uiwebview-content-not-to-move-when-keyboard-is-shown
+// UIScrollViewDelegate method
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    scrollView.bounds = _webView.bounds;
 }
 
 //since there is no easy way to load the static lib resource in ios,

@@ -228,8 +228,23 @@ var WebViewBridge = React.createClass({
     );
   },
 
-  sendToBridge: function (message: string) {
-    WebViewBridgeManager.sendToBridge(this.getWebViewBridgeHandle(), message);
+  sendToBridge: function (message: string, isJSCode: string) {
+      if (isJSCode === "true"){
+        WebViewBridgeManager.sendToBridgeAsJS(this.getWebViewBridgeHandle(), message);
+      }
+      else {
+        WebViewBridgeManager.sendToBridge(this.getWebViewBridgeHandle(), message);
+      }
+  },
+
+  getElementHTML: function (elementId: string, callback) {
+    var html = WebViewBridgeManager.getElementHTML(this.getWebViewBridgeHandle(), elementId, callback);
+    console.log("html from editor is " + html);
+  },
+
+  getSelectedHTML: function (elementId: string, callback) {
+    var html = WebViewBridgeManager.getSelectedHTML(this.getWebViewBridgeHandle(), elementId, callback);
+    console.log("html from editor is " + html);
   },
 
   /**
