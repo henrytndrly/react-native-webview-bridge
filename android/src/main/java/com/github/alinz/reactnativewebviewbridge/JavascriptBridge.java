@@ -1,5 +1,6 @@
 package com.github.alinz.reactnativewebviewbridge;
 
+import android.support.annotation.Nullable;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
@@ -14,8 +15,9 @@ class JavascriptBridge {
 
     protected @Nullable String _uuid;
 
-    public JavascriptBridge(WebView webView) {
+    public JavascriptBridge(WebView webView, String uuid) {
         this.webView = webView;
+        this._uuid = uuid;
     }
 
     @JavascriptInterface

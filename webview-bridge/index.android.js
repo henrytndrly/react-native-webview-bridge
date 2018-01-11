@@ -33,7 +33,7 @@ var {
     WebViewBridgeManager
   }
 } = ReactNative;
-var { PropTypes } = require('prop-types');;
+var { PropTypes } = require('prop-types');
 var rnUuid = require('react-native-uuid');
 var createReactClass = require('create-react-class');
 
@@ -81,7 +81,7 @@ var WebViewBridge = createReactClass({
       if (onBridgeMessage) {
         onBridgeMessage(message);
       }
-    };);
+    });
 
     if (this.props.startInLoadingState) {
       this.setState({viewState: WebViewBridgeState.LOADING});
@@ -183,6 +183,7 @@ var WebViewBridge = createReactClass({
       if (isJSCode != null) {
           alert('Implement RN WebView Bridge sendToBridge for Android!');
       }
+
     UIManager.dispatchViewManagerCommand(
       this.getWebViewBridgeHandle(),
       UIManager.RCTWebViewBridge.Commands.sendToBridge,
