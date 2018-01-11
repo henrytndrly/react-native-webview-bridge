@@ -221,6 +221,14 @@ var WebViewBridge = React.createClass({
     });
     this.updateNavigationState(event);
   },
+
+  stopLoading: function(event) {
+    UIManager.dispatchViewManagerCommand(
+      this.getWebViewBridgeHandle(),
+      UIManager.RCTWebViewBridge.Commands.stopLoading,
+      [],
+    );
+  },
 });
 
 
