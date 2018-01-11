@@ -9,6 +9,8 @@ import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.views.webview.ReactWebViewManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
+import org.apache.commons.text.StringEscapeUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -117,7 +119,9 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     }
 
     private void sendToBridge(WebView root, String message) {
-        String script = "(function(){ if (WebViewBridge && WebViewBridge.__push__) { WebViewBridge.__push__(\"" + message + "\"); } }());";
+        // need to escape this for JavaScript to be able to process correctly...
+        String escapedMessage = StringEscapeUtils.escapeEcmaScript(message);
+        String script = "(function(){ if (WebViewBridge && WebViewBridge.__push__) { WebViewBridge.__push__(\"" + escapedMessage + "\"); } }());";
         WebViewBridgeManager.evaluateJavascript(root, script);
     }
 
