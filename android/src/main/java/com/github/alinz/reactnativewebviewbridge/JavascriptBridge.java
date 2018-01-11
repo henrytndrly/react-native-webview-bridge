@@ -12,6 +12,8 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
 class JavascriptBridge {
     private WebView webView;
 
+    protected @Nullable String _uuid;
+
     public JavascriptBridge(WebView webView) {
         this.webView = webView;
     }
@@ -25,10 +27,15 @@ class JavascriptBridge {
     public void nativeAndroidSend(String message) {
         WritableMap event = Arguments.createMap();
         event.putString("message", message);
+        event.putString("uuid", _uuid);
         ReactContext reactContext = (ReactContext) this.webView.getContext();
         reactContext
                 .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                 .emit("WebViewBridgeMessageEvent", event);
 
+    }
+
+    public void setUuid(@Nullable String uuid) {
+        _uuid = uuid;
     }
 }

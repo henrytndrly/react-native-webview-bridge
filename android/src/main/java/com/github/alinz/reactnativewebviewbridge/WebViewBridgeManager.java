@@ -25,6 +25,9 @@ public class WebViewBridgeManager extends ReactWebViewManager {
 
     private ReactApplicationContext reactApplicationContext;
 
+    private JavascriptBridge bridge = null;
+    private @Nullable String _uuid = "";
+
     public WebViewBridgeManager(ReactApplicationContext reactApplicationContext) {
         super();
         //we need to know the context because we need to load files from asset
@@ -52,7 +55,8 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
         WebView root = super.createViewInstance(reactContext);
-        root.addJavascriptInterface(new JavascriptBridge(root), "WebViewBridge");
+        bridge = new JavascriptBridge(root, _uuid);
+        root.addJavascriptInterface(bridge, "WebViewBridge");
         return root;
     }
 
@@ -138,5 +142,13 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     @ReactProp(name = "allowUniversalAccessFromFileURLs")
     public void setAllowUniversalAccessFromFileURLs(WebView root, boolean allows) {
         root.getSettings().setAllowUniversalAccessFromFileURLs(allows);
+    }
+
+    @ReactProp(name = "uuid")
+    public void setUuid(WebView root, @Nullable String uuid) {
+        _uuid = uuid;
+        if (bridge != null) {
+            bridge.setUuid(uuid);
+        }
     }
 }

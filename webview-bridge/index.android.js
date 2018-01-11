@@ -33,7 +33,9 @@ var {
     WebViewBridgeManager
   }
 } = ReactNative;
-var { PropTypes } = React;
+var { PropTypes } = require('prop-types');;
+var rnUuid = require('react-native-uuid');
+var createReactClass = require('create-react-class');
 
 var RCT_WEBVIEWBRIDGE_REF = 'webviewbridge';
 
@@ -48,7 +50,7 @@ var RCTWebViewBridge = requireNativeComponent('RCTWebViewBridge', WebViewBridge)
 /**
  * Renders a native WebView.
  */
-var WebViewBridge = React.createClass({
+var WebViewBridge = createReactClass({
 
   propTypes: {
     ...RCTWebViewBridge.propTypes,
@@ -70,8 +72,11 @@ var WebViewBridge = React.createClass({
 
   componentWillMount: function() {
 
-    DeviceEventEmitter.addListener("WebViewBridgeMessageEvent", (body) => {
+    this.uuid = rnUuid.v4();
+
+    this.wvbeListener = DeviceEventEmitter.addListener("WebViewBridgeMessageEvent", (body) => {
       const { onBridgeMessage } = this.props;
+      if (body.uuid != this.uuid) { return; }
       const message = body.message;
       if (onBridgeMessage) {
         onBridgeMessage(message);
@@ -81,6 +86,10 @@ var WebViewBridge = React.createClass({
     if (this.props.startInLoadingState) {
       this.setState({viewState: WebViewBridgeState.LOADING});
     }
+  },
+
+  componentWillUnmount() {
+    if (this.wvbeListener != null) this.wvbeListener.remove();
   },
 
   render: function() {
@@ -123,6 +132,7 @@ var WebViewBridge = React.createClass({
         key="webViewKey"
  				javaScriptEnabled={true}
         {...props}
+        uuid={this.uuid}
         source={resolveAssetSource(source)}
         style={webViewStyles}
         onLoadingStart={this.onLoadingStart}
