@@ -24,6 +24,7 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     public static final int COMMAND_INJECT_WEBVIEW_BRIDGE = 101;
     public static final int COMMAND_INJECT_RPC = 102;
     public static final int COMMAND_SEND_TO_BRIDGE = 103;
+    public static final int COMMAND_GET_ELEMENT_HTML = 104;
 
     private ReactApplicationContext reactApplicationContext;
 
@@ -50,6 +51,7 @@ public class WebViewBridgeManager extends ReactWebViewManager {
         commandsMap.put("sendToBridge", COMMAND_SEND_TO_BRIDGE);
         commandsMap.put("injectWebViewBridge", COMMAND_INJECT_WEBVIEW_BRIDGE);
         commandsMap.put("injectRPC", COMMAND_INJECT_RPC);
+        commandsMap.put("getElementHTML", COMMAND_GET_ELEMENT_HTML);
 
         return commandsMap;
     }
@@ -75,6 +77,9 @@ public class WebViewBridgeManager extends ReactWebViewManager {
                 break;
             case COMMAND_INJECT_RPC:
                 injectWebViewBridgeRPCScript(root);
+                break;
+            case COMMAND_GET_ELEMENT_HTML:
+                getElementHTML(root, args.getString(0));
                 break;
             default:
                 //do nothing!!!!
@@ -123,6 +128,27 @@ public class WebViewBridgeManager extends ReactWebViewManager {
         String escapedMessage = StringEscapeUtils.escapeEcmaScript(message);
         String script = "(function(){ if (WebViewBridge && WebViewBridge.__push__) { WebViewBridge.__push__(\"" + escapedMessage + "\"); } }());";
         WebViewBridgeManager.evaluateJavascript(root, script);
+    }
+
+
+    private void getElementHTML(final WebView root, final @Nullable String elementID) {
+
+        String javascript = String.format("document.getElementById(\"%s\").innerHTML", elementID);
+
+        root.evaluateJavascript(javascript, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+
+                WritableMap event = Arguments.createMap();
+                event.putString("value", value);
+                event.putString("elementID", elementID);
+                event.putString("uuid", _uuid);
+                ReactContext reactContext = (ReactContext) root.getContext();
+                reactContext
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("GetElementHTMLEvent", event);
+            }
+        });
     }
 
     static private void evaluateJavascript(WebView root, String javascript) {

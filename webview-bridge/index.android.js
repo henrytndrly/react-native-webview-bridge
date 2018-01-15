@@ -83,6 +83,11 @@ var WebViewBridge = createReactClass({
       }
     });
 
+    this.elementHtmlListener = DeviceEventEmitter.addListener("GetElementHTMLEvent", (event) => {
+        if (event.uuid != this.uuid) { return; }
+        this.onReceiveElementHTML(event)
+    })
+
     if (this.props.startInLoadingState) {
       this.setState({viewState: WebViewBridgeState.LOADING});
     }
@@ -90,6 +95,7 @@ var WebViewBridge = createReactClass({
 
   componentWillUnmount() {
     if (this.wvbeListener != null) this.wvbeListener.remove();
+    if (this.elementHtmlListener != null) this.elementHtmlListener.remove();
   },
 
   render: function() {
@@ -240,8 +246,58 @@ var WebViewBridge = createReactClass({
       [],
     );
   },
+
+  _elementCallbacks: {},
+
+  getElementHTML: function(elementID, callback) {
+    var innerCallback = (strng) => {
+        if (typeof callback === 'function') {
+            callback(null, strng);
+        }
+    }
+
+    if (this._elementCallbacks[elementID] == null) {
+        this._elementCallbacks[elementID] = [];
+    }
+
+    this._elementCallbacks[elementID].push(innerCallback);
+
+    UIManager.dispatchViewManagerCommand(
+      this.getWebViewBridgeHandle(),
+      UIManager.RCTWebViewBridge.Commands.getElementHTML,
+      [
+          elementID,
+          innerCallback,
+      ],
+    );
+
+  },
+
+  onReceiveElementHTML: function(event) {
+      const value = event.value;
+      const elementID = event.elementID;
+
+      var fns = [...this._elementCallbacks[elementID]];
+      if (fns != null) {
+          fns.map((callback) => {
+              if (typeof callback === 'function') {
+                  const deJSON = JSON.parse(value);
+                  callback(deJSON);
+              }
+
+              removeArrayElement(this._elementCallbacks[elementID], callback);
+          })
+      }
+  },
 });
 
+var removeArrayElement = (arr, obj) => {
+    const index = arr.indexOf(obj);
+    if (index > -1) {
+        return arr.splice(index, 1);
+    }
+    return arr;
+}
 
 var styles = StyleSheet.create({
   container: {
