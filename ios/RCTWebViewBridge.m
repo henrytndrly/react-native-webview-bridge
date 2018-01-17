@@ -84,7 +84,12 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithCoder:(NSCoder *)aDecoder)
 }
 
 - (NSString*) getSelectedHTML {
-    NSString* JSString = [NSString stringWithFormat:@"document.getSelection()"];
+    NSString* JSString = [NSString stringWithFormat:@"document.getSelection().toString()"];
+    return [_webView stringByEvaluatingJavaScriptFromString:JSString];
+}
+
+- (NSString*) getSelectedURL {
+    NSString* JSString = [NSString stringWithFormat:@"(function(){ var a = $(document.getSelection().anchorNode).closest(\"a\")[0]; if (a == null) return ""; return a.href; })();"];
     return [_webView stringByEvaluatingJavaScriptFromString:JSString];
 }
 

@@ -1,10 +1,15 @@
 package com.github.alinz.reactnativewebviewbridge;
 
 import android.content.Context;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.ThemedReactContext;
 import com.facebook.react.views.webview.ReactWebViewManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
@@ -60,7 +65,7 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     protected WebView createViewInstance(ThemedReactContext reactContext) {
         WebView root = super.createViewInstance(reactContext);
         bridge = new JavascriptBridge(root, _uuid);
-        root.addJavascriptInterface(bridge, "WebViewBridge");
+        root.addJavascriptInterface(bridge, "WebViewBridgeAndroid");
         return root;
     }
 
@@ -70,7 +75,7 @@ public class WebViewBridgeManager extends ReactWebViewManager {
 
         switch (commandId) {
             case COMMAND_SEND_TO_BRIDGE:
-                sendToBridge(root, args.getString(0));
+                sendToBridge(root, args.getString(0), args.getBoolean(1));
                 break;
             case COMMAND_INJECT_WEBVIEW_BRIDGE:
                 injectWebViewBridgeScript(root);
@@ -123,10 +128,16 @@ public class WebViewBridgeManager extends ReactWebViewManager {
         }
     }
 
-    private void sendToBridge(WebView root, String message) {
+    private void sendToBridge(WebView root, String message, boolean isJSCode) {
         // need to escape this for JavaScript to be able to process correctly...
-        String escapedMessage = StringEscapeUtils.escapeEcmaScript(message);
-        String script = "(function(){ if (WebViewBridge && WebViewBridge.__push__) { WebViewBridge.__push__(\"" + escapedMessage + "\"); } }());";
+        String script = "";
+        if (!isJSCode) {
+            String escapedMessage = StringEscapeUtils.escapeEcmaScript(message);
+            script = "(function(){ if (WebViewBridge && WebViewBridge.__push__) { WebViewBridge.__push__(\"" + escapedMessage + "\"); } }());";
+        }
+        else {
+            script = "(function(){ " + message + " }());";
+        }
         WebViewBridgeManager.evaluateJavascript(root, script);
     }
 

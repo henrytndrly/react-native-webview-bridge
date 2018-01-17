@@ -120,15 +120,30 @@ RCT_EXPORT_METHOD(getSelectedHTML:(nonnull NSNumber *)reactTag :(NSString*)eleme
             RCTLogError(@"Invalid view returned from registry, expecting RCTWebViewBridge, got: %@", view);
         } else {
             NSString* html = [view getSelectedHTML];
-            NSLog(@"Selected HTML is %@", html);
+            //RCTLog(@"Returning Selected HTML (inside the brackets): [%@]", html);
             callback(@[[NSNull null], html]);
+        }
+    }];
+}
+
+RCT_EXPORT_METHOD(getSelectedHTMLAndURL:(nonnull NSNumber *)reactTag :(NSString*)elementId :(RCTResponseSenderBlock)callback)
+{
+    [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, RCTWebViewBridge *> *viewRegistry) {
+        RCTWebViewBridge *view = viewRegistry[reactTag];
+        if (![view isKindOfClass:[RCTWebViewBridge class]]) {
+            RCTLogError(@"Invalid view returned from registry, expecting RCTWebViewBridge, got: %@", view);
+        } else {
+            NSString* html = [view getSelectedHTML];
+            NSString* url = [view getSelectedURL];
+            //RCTLog(@"Returning Selected URL (inside the brackets): [%@]", html);
+            callback(@[[NSNull null], html, url]);
         }
     }];
 }
 
 RCT_EXPORT_METHOD(sendToBridge:(nonnull NSNumber *)reactTag
                   value:(NSString*)message
-              )
+                  )
 {
     [self sendToBridgeInternal:reactTag value:message andIsJSCode:@"false"];
 }
@@ -136,18 +151,19 @@ RCT_EXPORT_METHOD(sendToBridge:(nonnull NSNumber *)reactTag
 // This needs to be a different method name to 'sendToBridge' as Objective C doesn't
 // have optional parameters... (which is what 'isJSCode' would otherwise be)
 RCT_EXPORT_METHOD(sendToBridgeAsJS:(nonnull NSNumber *)reactTag
-                 value:(NSString*)message
-                 )
+                  value:(NSString*)message
+                  )
 {
    [self sendToBridgeInternal:reactTag value:message andIsJSCode:@"true"];
 }
 
 - (void)sendToBridgeInternal:(nonnull NSNumber *)reactTag
-                  value:(NSString*)message
-                  andIsJSCode:(NSString*)isJSCode
+                       value:(NSString*)message
+                 andIsJSCode:(NSString*)isJSCode
 {
   [self.bridge.uiManager addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, RCTWebViewBridge *> *viewRegistry) {
     RCTWebViewBridge *view = viewRegistry[reactTag];
+    //  RCTLog(@"SendToBridgeInternal %@, isJS? %@", message, isJSCode);
     if (![view isKindOfClass:[RCTWebViewBridge class]]) {
       RCTLogError(@"Invalid view returned from registry, expecting RCTWebViewBridge, got: %@", view);
     } else {

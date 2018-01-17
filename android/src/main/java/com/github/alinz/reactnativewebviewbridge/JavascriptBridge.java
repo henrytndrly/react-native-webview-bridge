@@ -21,11 +21,6 @@ class JavascriptBridge {
     }
 
     @JavascriptInterface
-    public void send(String message) {
-        nativeAndroidSend(message);
-    }
-
-    @JavascriptInterface
     public void nativeAndroidSend(String message) {
         WritableMap event = Arguments.createMap();
         event.putString("message", message);

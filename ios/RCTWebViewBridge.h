@@ -56,5 +56,6 @@ shouldStartLoadForRequest:(NSMutableDictionary<NSString *, id> *)request
 - (void)sendToBridge:(NSString *)message andIsJSCode:(NSString *)isJSCode;
 - (NSString*) getElementHTML:(NSString*)elementId;
 - (NSString*) getSelectedHTML;
+- (NSString*) getSelectedURL;
 
 @end

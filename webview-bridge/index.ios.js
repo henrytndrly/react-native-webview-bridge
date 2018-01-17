@@ -240,13 +240,15 @@ var WebViewBridge = createReactClass({
     },
 
   getElementHTML: function (elementId: string, callback) {
-    var html = WebViewBridgeManager.getElementHTML(this.getWebViewBridgeHandle(), elementId, callback);
-    console.log("html from editor is " + html);
+    WebViewBridgeManager.getElementHTML(this.getWebViewBridgeHandle(), elementId, callback);
   },
 
   getSelectedHTML: function (elementId: string, callback) {
-    var html = WebViewBridgeManager.getSelectedHTML(this.getWebViewBridgeHandle(), elementId, callback);
-    console.log("html from editor is " + html);
+    WebViewBridgeManager.getSelectedHTML(this.getWebViewBridgeHandle(), elementId, callback);
+  },
+
+  getSelectedHTMLAndURL: function (elementId: string, callback) {
+    WebViewBridgeManager.getSelectedHTMLAndURL(this.getWebViewBridgeHandle(), elementId, callback);
   },
 
     /**

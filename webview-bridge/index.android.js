@@ -29,9 +29,6 @@ var {
   WebView,
   requireNativeComponent,
   DeviceEventEmitter,
-  NativeModules: {
-    WebViewBridgeManager
-  }
 } = ReactNative;
 var { PropTypes } = require('prop-types');
 var rnUuid = require('react-native-uuid');
@@ -186,15 +183,24 @@ var WebViewBridge = createReactClass({
   },
 
   sendToBridge: function (message: string, isJSCode: string) {
-      if (isJSCode != null) {
-          alert('Implement RN WebView Bridge sendToBridge for Android!');
-      }
 
-    UIManager.dispatchViewManagerCommand(
-      this.getWebViewBridgeHandle(),
-      UIManager.RCTWebViewBridge.Commands.sendToBridge,
-      [message]
-    );
+    if (isJSCode === "true") {
+      // alert('Implement RN WebView Bridge sendToBridge for Android!');
+      // console.log("Implement RN WebView Bridge sendToBridge for Android!", {message ,isJSCode});
+      UIManager.dispatchViewManagerCommand(
+        this.getWebViewBridgeHandle(),
+        UIManager.RCTWebViewBridge.Commands.sendToBridge,
+        [message, true]
+      );
+    }
+    else {
+
+      UIManager.dispatchViewManagerCommand(
+        this.getWebViewBridgeHandle(),
+        UIManager.RCTWebViewBridge.Commands.sendToBridge,
+        [message, false]
+      );
+    }
   },
 
   /**
@@ -215,6 +221,7 @@ var WebViewBridge = createReactClass({
     var onLoadStart = this.props.onLoadStart;
     onLoadStart && onLoadStart(event);
     this.updateNavigationState(event);
+    this.injectWebViewBridge();
   },
 
   onLoadingError: function(event) {
@@ -243,6 +250,14 @@ var WebViewBridge = createReactClass({
     UIManager.dispatchViewManagerCommand(
       this.getWebViewBridgeHandle(),
       UIManager.RCTWebViewBridge.Commands.stopLoading,
+      [],
+    );
+  },
+
+  injectWebViewBridge: function() {
+    UIManager.dispatchViewManagerCommand(
+      this.getWebViewBridgeHandle(),
+      UIManager.RCTWebViewBridge.Commands.injectWebViewBridge,
       [],
     );
   },
