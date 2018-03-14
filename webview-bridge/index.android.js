@@ -221,7 +221,6 @@ var WebViewBridge = createReactClass({
     var onLoadStart = this.props.onLoadStart;
     onLoadStart && onLoadStart(event);
     this.updateNavigationState(event);
-    this.injectWebViewBridge();
   },
 
   onLoadingError: function(event) {
@@ -244,6 +243,7 @@ var WebViewBridge = createReactClass({
       viewState: WebViewBridgeState.IDLE,
     });
     this.updateNavigationState(event);
+    this.injectWebViewBridge();
   },
 
   stopLoading: function(event) {
