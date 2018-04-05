@@ -15,9 +15,8 @@ class JavascriptBridge {
 
     protected @Nullable String _uuid;
 
-    public JavascriptBridge(WebView webView, String uuid) {
+    public JavascriptBridge(WebView webView) {
         this.webView = webView;
-        this._uuid = uuid;
     }
 
     @JavascriptInterface

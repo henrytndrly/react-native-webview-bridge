@@ -265,17 +265,19 @@ var WebViewBridge = createReactClass({
   _elementCallbacks: {},
 
   getElementHTML: function(elementID, callback) {
-    var innerCallback = (strng) => {
+    const innerCallback = (strng) => {
         if (typeof callback === 'function') {
             callback(null, strng);
         }
     }
 
-    if (this._elementCallbacks[elementID] == null) {
-        this._elementCallbacks[elementID] = [];
+    const callbackKey = this.buildCallbackKey(elementID)
+
+    if (this._elementCallbacks[callbackKey] == null) {
+        this._elementCallbacks[callbackKey] = [];
     }
 
-    this._elementCallbacks[elementID].push(innerCallback);
+    this._elementCallbacks[callbackKey].push(innerCallback);
 
     UIManager.dispatchViewManagerCommand(
       this.getWebViewBridgeHandle(),
@@ -290,9 +292,9 @@ var WebViewBridge = createReactClass({
 
   onReceiveElementHTML: function(event) {
       const value = event.value;
-      const elementID = event.elementID;
+      const callbackKey = this.buildCallbackKey(event.elementID);
 
-      var fns = [...this._elementCallbacks[elementID]];
+      var fns = [...this._elementCallbacks[callbackKey]];
       if (fns != null) {
           fns.map((callback) => {
               if (typeof callback === 'function') {
@@ -300,10 +302,14 @@ var WebViewBridge = createReactClass({
                   callback(deJSON);
               }
 
-              removeArrayElement(this._elementCallbacks[elementID], callback);
+              removeArrayElement(this._elementCallbacks[callbackKey], callback);
           })
       }
   },
+
+  buildCallbackKey: function(elementID) {
+      return `${this.uuid}_${elementID}`
+  }
 });
 
 var removeArrayElement = (arr, obj) => {

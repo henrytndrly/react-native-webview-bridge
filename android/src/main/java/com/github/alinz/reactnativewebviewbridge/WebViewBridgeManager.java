@@ -1,6 +1,7 @@
 package com.github.alinz.reactnativewebviewbridge;
 
 import android.content.Context;
+import android.util.Log;
 import android.webkit.ValueCallback;
 import android.webkit.WebView;
 
@@ -19,6 +20,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.annotation.Nullable;
 
@@ -30,15 +32,19 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     public static final int COMMAND_SEND_TO_BRIDGE = 103;
     public static final int COMMAND_GET_ELEMENT_HTML = 104;
 
+    public static String TAG = REACT_CLASS;
+
     private ReactApplicationContext reactApplicationContext;
 
-    private JavascriptBridge bridge = null;
-    private @Nullable String _uuid = "";
+    private WeakHashMap<WebView, String> _uuidMap;
+    private WeakHashMap<WebView, JavascriptBridge> _bridgeMap;
 
     public WebViewBridgeManager(ReactApplicationContext reactApplicationContext) {
         super();
         //we need to know the context because we need to load files from asset
         this.reactApplicationContext = reactApplicationContext;
+        _uuidMap = new WeakHashMap<>();
+        _bridgeMap = new WeakHashMap<>();
     }
 
     @Override
@@ -63,8 +69,9 @@ public class WebViewBridgeManager extends ReactWebViewManager {
     @Override
     protected WebView createViewInstance(ThemedReactContext reactContext) {
         WebView root = super.createViewInstance(reactContext);
-        bridge = new JavascriptBridge(root, _uuid);
+        JavascriptBridge bridge = new JavascriptBridge(root);
         root.addJavascriptInterface(bridge, "WebViewBridgeAndroid");
+        _bridgeMap.put(root, bridge);
         return root;
     }
 
@@ -149,10 +156,12 @@ public class WebViewBridgeManager extends ReactWebViewManager {
             @Override
             public void onReceiveValue(String value) {
 
+                String uuid = _uuidMap.get(root);
+
                 WritableMap event = Arguments.createMap();
                 event.putString("value", value);
                 event.putString("elementID", elementID);
-                event.putString("uuid", _uuid);
+                event.putString("uuid", uuid);
                 ReactContext reactContext = (ReactContext) root.getContext();
                 reactContext
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
@@ -186,7 +195,8 @@ public class WebViewBridgeManager extends ReactWebViewManager {
 
     @ReactProp(name = "uuid")
     public void setUuid(WebView root, @Nullable String uuid) {
-        _uuid = uuid;
+        _uuidMap.put(root, uuid);
+        JavascriptBridge bridge = _bridgeMap.get(root);
         if (bridge != null) {
             bridge.setUuid(uuid);
         }
