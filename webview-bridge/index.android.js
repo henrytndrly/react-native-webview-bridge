@@ -284,7 +284,7 @@ var WebViewBridge = createReactClass({
       UIManager.RCTWebViewBridge.Commands.getElementHTML,
       [
           elementID,
-          innerCallback,
+          // innerCallback,
       ],
     );
 
