@@ -14,7 +14,9 @@
 'use strict';
 
 var React = require('react');
+var PropTypes = require('prop-types');
 var ReactNative = require('react-native');
+var createReactClass = require('create-react-class');
 var invariant = require('invariant');
 var keyMirror = require('keymirror');
 var resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
@@ -26,13 +28,12 @@ var {
   StyleSheet,
   Text,
   View,
+  ViewPropTypes,
   WebView,
   requireNativeComponent,
   DeviceEventEmitter,
 } = ReactNative;
-var { PropTypes } = require('prop-types');
 var rnUuid = require('react-native-uuid');
-var createReactClass = require('create-react-class');
 
 var RCT_WEBVIEWBRIDGE_REF = 'webviewbridge';
 
@@ -66,7 +67,7 @@ var WebViewBridge = createReactClass({
     };
   },
 
-
+  
   componentWillMount: function() {
 
     this.uuid = rnUuid.v4();

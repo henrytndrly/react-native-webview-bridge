@@ -10,18 +10,12 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import <UIKit/UIKit.h>
-
-#import <React/RCTAutoInsetsProtocol.h>
-#import <React/RCTConvert.h>
-#import <React/RCTEventDispatcher.h>
-#import <React/RCTLog.h>
-#import <React/RCTUtils.h>
+#if __has_include(<React/RCTView.h>)
 #import <React/RCTView.h>
-#import <React/UIView+React.h>
-
-#import <objc/runtime.h>
-
+#else
+#import "RCTView.h"
+#endif
+    
 @class RCTWebViewBridge;
 
 /**

@@ -9,6 +9,12 @@ Thanks!
 ## Please take a look at this [issue](https://github.com/alinz/react-native-webview-bridge/issues/109) first
 
 # React Native WebView Javascript Bridge
+
+[![GitHub tag](https://img.shields.io/github/tag/alinz/react-native-webview-bridge.svg)](https://github.com/alinz/react-native-webview-bridge)
+[![npm version](https://badge.fury.io/js/react-native-webview-bridge.svg)](https://badge.fury.io/js/react-native-webview-bridge)
+[![GitHub license](https://img.shields.io/github/license/alinz/react-native-webview-bridge.svg)](https://github.com/alinz/react-native-webview-bridge/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/alinz/react-native-webview-bridge.svg)](https://github.com/alinz/react-native-webview-bridge/stargazers)
+
 I have been testing and reading a lot of way to safely create a bridge between react-native and webview. I'm happy to announced that the wait is over and from **React-Native 0.20 and above**, the bridge is fully functional.
 
 
@@ -53,7 +59,7 @@ in your react-native project, run `npm install react-native-webview-bridge --sav
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
 ```
 
-2. add the following code to add the package to `MainApplication.java`` (`MainActivity.java` if RN < 0.29)
+2. add the following code to add the package to `MainApplication.java` (`MainActivity.java` if RN < 0.29)
 
 ```java
 protected List<ReactPackage> getPackages() {
@@ -154,7 +160,7 @@ const injectScript = `
                   }());
 `;
 
-var Sample2 = React.createClass({
+var Sample2 = createReactClass({
   onBridgeMessage(message){
     const { webviewbridge } = this.refs;
 
@@ -174,7 +180,7 @@ var Sample2 = React.createClass({
         ref="webviewbridge"
         onBridgeMessage={this.onBridgeMessage.bind(this)}
         injectedJavaScript={injectScript}
-        source={{uri: "http://google.com"}}/>
+        source={{uri: "https://google.com"}}/>
     );
   }
 });

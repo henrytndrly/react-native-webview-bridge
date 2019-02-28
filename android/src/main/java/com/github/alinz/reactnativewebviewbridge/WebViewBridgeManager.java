@@ -177,10 +177,17 @@ public class WebViewBridgeManager extends ReactWebViewManager {
             root.loadUrl("javascript:" + javascript);
         }
     }
-
+    
     @ReactProp(name = "injectedJavaScript")
     public void setInjectedJavaScript(WebView root, @Nullable String injectedJavaScript) {
         evaluateJavascript(root, injectedJavaScript);
+    }
+
+    @ReactProp(name = "requestFocus")
+    public void requestFocus(WebView root, boolean isRequestFocus) {
+        if(isRequestFocus) {
+            root.requestFocus();
+        }
     }
 
     @ReactProp(name = "allowFileAccessFromFileURLs")

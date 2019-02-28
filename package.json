@@ -32,5 +32,11 @@
   "bugs": {
     "url": "https://github.com/alinz/react-native-webview-bridge/issues"
   },
-  "homepage": "https://github.com/alinz/react-native-webview-bridge"
+  "homepage": "https://github.com/alinz/react-native-webview-bridge",
+  "dependencies": {
+    "create-react-class": "^15.6.0",
+    "invariant": "^2.2.2",
+    "keymirror": "0.1.1",
+    "prop-types": "^15.5.10"
+  }
 }
