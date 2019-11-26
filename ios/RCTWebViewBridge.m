@@ -67,8 +67,8 @@ NSString *const RCTWebViewBridgeSchema = @"wvb";
     _contentInset = UIEdgeInsetsZero;
     WKWebViewConfiguration *theConfiguration = [[WKWebViewConfiguration alloc] init];
     _webView = [[WKWebView alloc] initWithFrame:self.bounds configuration:theConfiguration];
-    _webView.delegate = self;
-    _webView.mediaPlaybackRequiresUserAction = NO;
+      [_webView setNavigationDelegate:self];
+//    _webView.mediaPlaybackRequiresUserAction = NO;
     [self addSubview:_webView];
   }
   return self;
