@@ -30,7 +30,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.facebook.react:react-native:0.19.+'
+    compile 'com.facebook.react:react-native:0.60.+'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-text
     compile group: 'org.apache.commons', name: 'commons-text', version: '1.2'
 }
+
+apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

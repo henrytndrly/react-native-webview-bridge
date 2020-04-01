@@ -12,7 +12,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.views.webview.ReactWebViewManager;
+//import com.facebook.react.views.webview.ReactWebViewManager;
 import com.facebook.react.uimanager.annotations.ReactProp;
 
 import org.apache.commons.text.StringEscapeUtils;
@@ -24,7 +24,8 @@ import java.util.WeakHashMap;
 
 import javax.annotation.Nullable;
 
-public class WebViewBridgeManager extends ReactWebViewManager {
+//public class WebViewBridgeManager extends ReactWebViewManager {
+public class WebViewBridgeManager extends RNCWebViewManager {
     private static final String REACT_CLASS = "RCTWebViewBridge";
 
     public static final int COMMAND_INJECT_WEBVIEW_BRIDGE = 101;
