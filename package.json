@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "jetifier": "^1.6.3",
-    "@react-native-community/cli-platform-android": "^2.6.2",
+    "@react-native-community/cli-platform-android": "^2.6.2"
   },
   "peerDependencies": {
-    "react-native-webview": "^7.5.2"   
+    "react-native-webview": "^7.5.2"
   }
 }
