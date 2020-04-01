@@ -120,7 +120,7 @@ var WebViewBridge = createReactClass({
     };
   },
 
-  componentWillMount: function() {
+  componentDidMount: function() {
     if (this.props.startInLoadingState) {
       this.setState({viewState: WebViewBridgeState.LOADING});
     }

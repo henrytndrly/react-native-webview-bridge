@@ -10,14 +10,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@react-native-community/cli-platform-android": "^2.6.2",
-    "create-react-class": "^15.6.0",
-    "invariant": "^2.2.2",
-    "keymirror": "0.1.1",
-    "prop-types": "^15.5.10",
-    "react-native-webview": "^9.0.2"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:alinz/react-native-webview-bridge.git"
@@ -37,7 +29,17 @@
     "url": "https://github.com/alinz/react-native-webview-bridge/issues"
   },
   "homepage": "https://github.com/alinz/react-native-webview-bridge",
+  "dependencies": {
+    "create-react-class": "^15.6.0",
+    "invariant": "^2.2.2",
+    "keymirror": "0.1.1",
+    "prop-types": "^15.5.10"
+  },
   "devDependencies": {
-    "jetifier": "^1.6.3"
+    "jetifier": "^1.6.3",
+    "@react-native-community/cli-platform-android": "^2.6.2",
+  },
+  "peerDependencies": {
+    "react-native-webview": "^7.5.2"   
   }
 }

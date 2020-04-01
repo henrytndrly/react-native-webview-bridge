@@ -69,7 +69,7 @@ var WebViewBridge = createReactClass({
   },
 
   
-  componentWillMount: function() {
+  componentDidMount: function() {
 
     this.uuid = rnUuid.v4();
 
