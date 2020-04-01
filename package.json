@@ -3,6 +3,10 @@
   "version": "0.45.0",
   "description": "React Native WebView Javascript Bridge",
   "main": "webview-bridge",
+  "directories": {
+    "example": "example",
+    "lib": "lib"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,9 +26,7 @@
     "react-native",
     "react-component",
     "ios",
-    "android",
-    "webview-bridge",
-    "rpc"
+    "webview-bridge"
   ],
   "author": "Ali Najafizadeh",
   "contributors": [
